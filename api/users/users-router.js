@@ -4,7 +4,7 @@ const { validateUserId, validateUser, validatePost } = require('../middleware/mi
 // You will need `users-model.js` and `posts-model.js` both
 // The middleware functions also need to be required
 const User = require('./users-model');
-const Post = require('../middleware/middleware');
+const Post = require('../posts/posts-model');
 
 const router = express.Router();
 
@@ -50,7 +50,7 @@ router.delete('/:id', validateUserId, async (req, res, next) => {
 
 router.get('/:id/posts', validateUserId, async (req, res, next) => {
   try {
-    const result = User.getUserPosts(req.params.id)
+    const result = await User.getUserPosts(req.params.id)
     res.json(result)
   } catch (err) {
     next(err)

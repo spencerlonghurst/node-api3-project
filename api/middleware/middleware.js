@@ -1,14 +1,24 @@
-// Users = require('./api/users')
+const User = require('../users/users-model')
 
 function logger(req, res, next) {
-  console.log('logger middleware')
   console.log(`[${new Date().toLocaleString()}] ${req.method} to ${req.url} `)
   next()
 }
 
-function validateUserId(req, res, next) {
-  console.log('validateUserId')
-  next()
+async function validateUserId(req, res, next) {
+  try {
+    const user = await User.getById(req.params.id)
+    if (!user) {
+      res.status(404).json({ message: "user not found" })
+    } else {
+      req.user = user
+      next()
+    }
+  } catch {
+    res.status(500).json({
+    message: 'Error retrieving the user',
+  });
+  }
 }
 
 function validateUser(req, res, next) {
